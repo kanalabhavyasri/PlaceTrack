@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>PlaceTrack</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);
+--bg:#eef3f2;--sf:#fff;--ink:#12211e;--mut:#5b6e69;--ln:#d5e0dd;--ac:#0f766e;--ac2:#134e8a;--aci:#fff;--amb:#d97706;--bad:#be123c;--ok:#15803d;--tint:#e1eeeb;--sh:0 6px 20px rgba(15,60,55,.10);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1513;--sf:#15211e;--ink:#e6f1ee;--mut:#94a9a3;--ln:#27382f;--ac:#3fc9b6;--ac2:#6aa8ff;--aci:#0c1513;--amb:#f4b45a;--bad:#ff7a98;--ok:#5fd68a;--tint:#1b2c28;--sh:0 6px 20px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0c1513;--sf:#15211e;--ink:#e6f1ee;--mut:#94a9a3;--ln:#27382f;--ac:#3fc9b6;--ac2:#6aa8ff;--aci:#0c1513;--amb:#f4b45a;--bad:#ff7a98;--ok:#5fd68a;--tint:#1b2c28;--sh:0 6px 20px rgba(0,0,0,.35);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 Sora,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.app{max-width:760px;margin:0 auto;padding:16px 16px calc(110px + env(safe-area-inset-bottom,0px))}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.top h1{margin:0;font-size:1.35rem;font-weight:800;letter-spacing:-.02em}.top p{margin:0;color:var(--mut);font-size:.85rem}
+.av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));color:var(--aci);display:grid;place-items:center;font-weight:800}
+h2{font-size:1rem;margin:20px 0 10px}
+.view{animation:in .25s ease-out}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hero{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border-radius:20px;padding:18px;display:flex;gap:16px;align-items:center;box-shadow:var(--sh)}
+.hero .tx{flex:1}.hero b{font-size:1.15rem;display:block}.hero small{opacity:.85}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{background:rgba(255,255,255,.18);border-radius:99px;padding:3px 10px;font-size:.8rem;font-weight:600}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--sh)}
+.row{display:flex;align-items:center;gap:10px}.sp{flex:1}
+.mut{color:var(--mut);font-size:.85rem}
+.btn{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:8px 12px;cursor:pointer;font-weight:600;transition:transform .1s}
+.btn:active{transform:scale(.96)}.btn.p{background:var(--ac);color:var(--aci);border-color:var(--ac)}.btn.d{color:var(--bad)}
+.sess{display:flex;align-items:center;gap:12px}
+.sess .ic{width:40px;height:40px;border-radius:12px;background:var(--tint);display:grid;place-items:center;font-size:1.2rem}
+.sess.did{opacity:.6}.sess.did b{text-decoration:line-through}
+.chk{width:24px;height:24px;accent-color:var(--ac)}
+.fl{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px}
+.f{white-space:nowrap;border:1px solid var(--ln);background:var(--sf);border-radius:99px;padding:6px 12px;cursor:pointer;font-weight:600;font-size:.85rem}
+.f.on{background:var(--ac);color:var(--aci);border-color:var(--ac)}
+input,select,textarea{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;width:100%}
+.step{display:flex;align-items:center;margin:10px 0 4px}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--ln)}.dot.on{background:var(--ac)}
+.ln{flex:1;height:3px;background:var(--ln)}.ln.on{background:var(--ac)}
+.badge{font-size:.75rem;font-weight:700;border-radius:99px;padding:2px 9px;background:var(--tint)}
+.badge.late{color:var(--bad)}.badge.soon{color:var(--amb)}
+.det{display:none;margin-top:10px}.card.open .det{display:block}
+.bars{display:flex;align-items:flex-end;gap:8px;height:130px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:.7rem;color:var(--mut)}
+.bar i{width:100%;max-width:34px;background:linear-gradient(var(--ac2),var(--ac));border-radius:8px 8px 3px 3px;min-height:4px;transition:height .5s}
+.hb{height:10px;background:var(--tint);border-radius:99px;overflow:hidden;margin:4px 0 10px}.hb i{display:block;height:100%;background:var(--ac)}
+.edit{display:grid;grid-template-columns:90px 1fr 62px 36px;gap:6px;margin-bottom:6px}
+.empty{text-align:center;color:var(--mut);padding:26px 10px}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));width:min(94vw,420px);display:flex;background:var(--sf);border:1px solid var(--ln);border-radius:22px;box-shadow:var(--sh);padding:6px;z-index:10}
+.nav button{flex:1;background:none;border:0;padding:8px 2px;border-radius:16px;cursor:pointer;color:var(--mut);font-size:.7rem;font-weight:600}
+.nav button span{display:block;font-size:1.25rem}.nav button.on{background:var(--tint);color:var(--ac)}
+.fab{position:fixed;right:max(18px,calc(50vw - 360px));bottom:calc(92px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:50%;border:0;background:var(--amb);color:#fff;font-size:1.8rem;box-shadow:var(--sh);cursor:pointer;z-index:10}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:30;align-items:flex-end;justify-content:center}
+.ov.on{display:flex}
+.sheet{background:var(--sf);width:min(100%,520px);border-radius:24px 24px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));animation:up .25s ease-out}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+.sheet label{display:block;margin:10px 0 4px;font-weight:600;font-size:.85rem}
+.tm{align-items:center;justify-content:center}
+.tmb{background:var(--sf);border-radius:24px;padding:24px;text-align:center;width:min(92vw,360px)}
+.big{font-size:2.2rem;font-weight:800}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:12px;display:none;z-index:40;max-width:92vw;align-items:center;gap:12px}
+.toast.on{display:flex}.toast button{background:none;border:0;color:var(--ac);font-weight:700;cursor:pointer}
+.cf{position:fixed;top:-10px;width:9px;height:14px;z-index:50;animation:fall 1.8s ease-in forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.8}}
+.auth{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:16px;overflow:auto;background:linear-gradient(145deg,var(--ac),var(--ac2))}
+.auth.on{display:flex}
+.acard{background:var(--sf);width:min(100%,400px);border-radius:24px;padding:24px;box-shadow:var(--sh);margin:auto}
+.acard h1{margin:6px 0 2px;font-size:1.5rem;font-weight:800}.logo{font-size:2.2rem}
+.acard label{display:block;margin:12px 0 4px;font-weight:600;font-size:.85rem}
+.seg{display:flex;background:var(--tint);border-radius:12px;padding:4px;margin:14px 0 4px}
+.seg button{flex:1;border:0;background:none;padding:8px;border-radius:9px;cursor:pointer;font-weight:700;color:var(--mut)}
+.seg button.on{background:var(--sf);color:var(--ac);box-shadow:var(--sh)}
+.acard .show{display:flex;gap:8px;align-items:center;font-weight:400}.acard .show input{width:auto}
+.aerr{color:var(--bad);font-size:.85rem;min-height:1.3em;margin:8px 0}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div><h1 id="hi"></h1><p id="dt"></p></div><button class="av" id="av" type="button" aria-label="Edit your name"></button></div>
+  <main id="view" class="view"></main>
+</div>
+<button class="fab" id="fab" type="button" aria-label="Add application">+</button>
+<nav class="nav" id="nav" aria-label="Main">
+  <button data-t="home"><span>🏠</span>Home</button><button data-t="apps"><span>💼</span>Jobs</button>
+  <button data-t="plan"><span>🗓️</span>Plan</button><button data-t="stats"><span>📊</span>Insights</button>
+</nav>
+
+<div class="ov" id="ov"><div class="sheet" role="dialog" aria-modal="true" aria-label="Add application">
+  <h2 style="margin-top:0">New application</h2>
+  <label for="co">Company</label><input id="co" maxlength="60" placeholder="e.g. TCS">
+  <label for="ro">Role</label><input id="ro" maxlength="60" placeholder="e.g. Frontend Developer">
+  <label for="st">Status</label><select id="st"></select>
+  <label for="dl">Deadline or interview date</label><input id="dl" type="date">
+  <p class="mut" id="err" role="alert" style="color:var(--bad);min-height:1.2em"></p>
+  <div class="row"><button class="btn sp" id="cx" type="button">Cancel</button><button class="btn p sp" id="sv" type="button">Save application</button></div>
+</div></div>
+
+<div class="ov tm" id="tm"><div class="tmb">
+  <p class="mut" id="tl"></p>
+  <svg width="200" height="200" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="88" fill="none" stroke="var(--ln)" stroke-width="12"/><circle id="tr" cx="100" cy="100" r="88" fill="none" stroke="var(--ac)" stroke-width="12" stroke-linecap="round" transform="rotate(-90 100 100)" stroke-dasharray="553" stroke-dashoffset="0"/></svg>
+  <div class="big" id="tt" style="margin-top:-130px;margin-bottom:96px"></div>
+  <div class="row"><button class="btn sp" id="tp" type="button">Pause</button><button class="btn p sp" id="tf" type="button">Finish</button></div>
+  <button class="btn d" id="tc" type="button" style="margin-top:10px;width:100%">Cancel session</button>
+</div></div>
+<div class="auth on" id="auth"><div class="acard">
+<div class="logo">🎯</div><h1>PlaceTrack</h1><p class="mut" id="au-t">Log in to continue your placement prep.</p>
+<div class="seg"><button type="button" id="tab-in" class="on">Log in</button><button type="button" id="tab-up">Sign up</button></div>
+<form id="au-form" novalidate>
+<div id="au-name-w" hidden><label for="au-name">Full name</label><input id="au-name" autocomplete="name" maxlength="40"></div>
+<label for="au-em">Email</label><input id="au-em" type="email" autocomplete="email">
+<label for="au-pw">Password</label><input id="au-pw" type="password" autocomplete="current-password">
+<div id="au-c-w" hidden><label for="au-c">Confirm password</label><input id="au-c" type="password" autocomplete="new-password"></div>
+<label class="show"><input type="checkbox" id="au-show"> Show password</label>
+<p class="aerr" id="au-err" role="alert"></p>
+<button class="btn p" id="au-go" type="submit" style="width:100%;padding:12px">Log in</button></form>
+<p class="mut" style="font-size:.78rem;margin-bottom:0">Accounts are saved on this device only.</p></div></div>
+<div class="toast" id="toast" role="status"><span id="tmsg"></span><button id="undo" hidden>Undo</button></div>
+
+<script>
+const STAT=["Wishlist","Applied","Online test","Interview","Offer","Rejected"],ACT=["Applied","Online test","Interview"];
+const ICON=[["aptitude","🧮"],["coding","💻"],["dsa","💻"],["mock","🎤"],["revision","📝"]];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let K="placetrack.v2",user=null;
+const def={name:"",apps:[{id:1,co:"Infosys",ro:"Systems Engineer",st:"Applied",dl:"",note:""},{id:2,co:"Zoho",ro:"Frontend Developer",st:"Wishlist",dl:"",note:""}],
+ slots:[{id:1,time:"07:00",label:"Aptitude: quant and logical",min:45},{id:2,time:"19:00",label:"Coding: DSA problems",min:90},{id:3,time:"21:30",label:"Revision and mock interview",min:30}],done:{},mins:{},notified:{}};
+let S=JSON.parse(JSON.stringify(def)),tab="home",flt="All",q="",openId=null,T=null,lastDel=null;
+function load(){try{const v=JSON.parse(localStorage.getItem(K));if(v&&v.apps&&v.slots)return v}catch(e){}return JSON.parse(JSON.stringify(def))}
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+const dk=d=>{d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const hm=()=>{const d=new Date();return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
+const prepOn=()=>S.apps.some(a=>ACT.includes(a.st));
+const dn=()=>S.done[dk()]||[];
+const sorted=()=>S.slots.slice().sort((a,b)=>a.time.localeCompare(b.time));
+const ico=l=>{l=l.toLowerCase();const m=ICON.find(i=>l.includes(i[0]));return m?m[1]:"⭐"};
+const left=dl=>dl?Math.round((new Date(dl+"T00:00:00")-new Date(dk()+"T00:00:00"))/864e5):null;
+function ring(p,sz){const r=sz/2-8,c=2*Math.PI*r;return `<svg width="${sz}" height="${sz}" aria-label="${p}% complete"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="9"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" transform="rotate(-90 ${sz/2} ${sz/2})" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-p/100)}" style="transition:stroke-dashoffset .6s"/><text x="50%" y="54%" text-anchor="middle" fill="#fff" font-weight="800" font-size="20">${p}%</text></svg>`}
+function streak(){let n=0;const d=new Date();if(!(S.done[dk(d)]||[]).length)d.setDate(d.getDate()-1);while((S.done[dk(d)]||[]).length){n++;d.setDate(d.getDate()-1)}return n}
+function toast(m,undo){$("tmsg").textContent=m;$("undo").hidden=!undo;$("toast").className="toast on";clearTimeout(toast.i);toast.i=setTimeout(()=>{$("toast").className="toast";lastDel=null},undo?6000:3500)}
+function confetti(){const c=["#14b8a6","#f59e0b","#6aa8ff","#f43f5e","#a3e635"];for(let i=0;i<36;i++){const e=document.createElement("i");e.className="cf";e.style.left=Math.random()*100+"vw";e.style.background=c[i%5];e.style.animationDelay=Math.random()*.4+"s";document.body.appendChild(e);setTimeout(()=>e.remove(),2400)}}
+
+function sessHTML(s,btn){const did=dn().includes(s.id);return `<div class="card sess ${did?"did":""}"><div class="ic">${ico(s.label)}</div><div class="sp"><b>${esc(s.label)}</b><div class="mut">${s.time} · ${s.min} min</div></div>${btn&&!did?`<button class="btn p" data-go="${s.id}">Start</button>`:""}<input class="chk" type="checkbox" data-done="${s.id}" ${did?"checked":""} aria-label="Mark ${esc(s.label)} done"></div>`}
+
+function vHome(){
+  const on=prepOn(),sl=sorted(),d=dn().filter(i=>S.slots.some(s=>s.id===i)).length,p=S.slots.length?Math.round(d/S.slots.length*100):0;
+  const next=sl.find(s=>!dn().includes(s.id)),dead=S.apps.filter(a=>a.dl&&left(a.dl)>=0&&!["Rejected","Offer"].includes(a.st)).sort((a,b)=>a.dl.localeCompare(b.dl))[0];
+  return `<div class="hero">${ring(on?p:0,104)}<div class="tx"><b>${!on?"Plan paused":p===100?"All done for today!":"Keep going"}</b><small>${!on?"Mark a job as Applied to start":next?`Next: ${esc(next.label)} at ${next.time}`:"Rest well"}</small>
+  <div class="chips"><span class="chip">🔥 ${streak()}-day streak</span><span class="chip">${S.apps.length} jobs</span></div></div></div>
+  ${dead?`<div class="card row" style="margin-top:12px"><span style="font-size:1.6rem">⏰</span><div class="sp"><b>${esc(dead.co)}</b><div class="mut">${esc(dead.st)} · ${left(dead.dl)===0?"today":"in "+left(dead.dl)+" days"}</div></div></div>`:""}
+  <h2>Today's preparation</h2>${on?sl.map(s=>sessHTML(s,1)).join(""):'<div class="empty">Set a job to Applied, Online test or Interview to unlock your daily plan.</div>'}`}
+
+function vApps(){
+  const cnt=s=>s==="All"?S.apps.length:S.apps.filter(a=>a.st===s).length;
+  const list=S.apps.filter(a=>(flt==="All"||a.st===flt)&&(a.co+a.ro).toLowerCase().includes(q.toLowerCase()));
+  return `<input id="q" type="search" placeholder="Search company or role" value="${esc(q)}" aria-label="Search" style="margin-bottom:10px">
+  <div class="fl">${["All",...STAT].map(s=>`<button class="f ${flt===s?"on":""}" data-f="${s}">${s} ${cnt(s)}</button>`).join("")}</div>
+  ${list.length?list.map(a=>{const i=STAT.indexOf(a.st),d=left(a.dl),rej=a.st==="Rejected";
+   return `<div class="card ${openId===a.id?"open":""}" ${rej?'style="opacity:.6"':""}><div class="row" data-open="${a.id}" style="cursor:pointer"><div class="sp"><b>${esc(a.co)}</b><div class="mut">${esc(a.ro)}</div></div>
+   ${d!==null?`<span class="badge ${d<0?"late":d<=3?"soon":""}">${d<0?-d+"d ago":d===0?"Today":d+"d left"}</span>`:""}<span class="badge">${a.st}</span></div>
+   ${rej?"":`<div class="step">${[0,1,2,3,4].map(n=>`${n?`<span class="ln ${i>=n?"on":""}"></span>`:""}<span class="dot ${i>=n?"on":""}"></span>`).join("")}</div>`}
+   <div class="det"><textarea data-note="${a.id}" rows="2" placeholder="Notes: contact person, topics asked, links">${esc(a.note||"")}</textarea>
+   <div class="row" style="margin-top:8px">${!rej&&i<4?`<button class="btn p" data-adv="${a.id}">Move to ${STAT[i+1]}</button>`:""}${!rej?`<button class="btn" data-rej="${a.id}">Rejected</button>`:""}<span class="sp"></span><button class="btn d" data-del="${a.id}">Delete</button></div></div></div>`}).join("")
+   :'<div class="empty">No applications match. Tap + to add one.</div>'}`}
+
+function vPlan(){
+  return `<h2 style="margin-top:0">Fixed daily schedule</h2><div class="card">${S.slots.map(s=>`<div class="edit"><input type="time" value="${s.time}" data-t="${s.id}" aria-label="Time"><input value="${esc(s.label)}" data-l="${s.id}" maxlength="50" aria-label="Activity"><input type="number" min="5" max="300" value="${s.min}" data-m="${s.id}" aria-label="Minutes"><button class="btn d" data-rs="${s.id}" aria-label="Remove">×</button></div>`).join("")}
+  <button class="btn" id="as" style="margin-top:6px">Add session</button></div>
+  <h2>Alerts</h2><div class="card"><div class="row"><button class="btn p sp" id="nt">Enable notifications</button><button class="btn sp" id="ics">Download calendar</button></div>
+  <p class="mut">Popups work while the app is open. Import the calendar file for alerts when it is closed.</p></div>
+  <h2>Settings</h2><div class="card row"><button class="btn sp" id="th">Switch theme</button><button class="btn p sp" id="in" hidden>Install app</button><button class="btn sp" id="lo">Log out</button><button class="btn d sp" id="rs">Reset data</button></div>`}
+
+function vStats(){
+  const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return{l:"SMTWTFS"[d.getDay()],n:(S.done[dk(d)]||[]).length,m:S.mins[dk(d)]||0}});
+  const mx=Math.max(1,...days.map(d=>d.n)),tot=Object.values(S.mins).reduce((a,b)=>a+b,0),n=S.apps.length||1;
+  return `<h2 style="margin-top:0">Sessions this week</h2><div class="card"><div class="bars">${days.map(d=>`<div class="bar"><span>${d.n}</span><i style="height:${d.n/mx*100}%"></i><span>${d.l}</span></div>`).join("")}</div></div>
+  <div class="row"><div class="card sp"><div class="mut">Focused time</div><b style="font-size:1.4rem">${Math.floor(tot/60)}h ${tot%60}m</b></div><div class="card sp"><div class="mut">Best streak now</div><b style="font-size:1.4rem">🔥 ${streak()}</b></div></div>
+  <h2>Pipeline</h2><div class="card">${STAT.map(s=>{const c=S.apps.filter(a=>a.st===s).length;return `<div class="row"><span class="sp">${s}</span><b>${c}</b></div><div class="hb"><i style="width:${c/n*100}%"></i></div>`}).join("")}</div>`}
+
+function render(){
+  const h=new Date().getHours();$("hi").textContent=`${h<12?"Good morning":h<17?"Good afternoon":"Good evening"}${S.name?", "+S.name:""}`;
+  $("dt").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});
+  $("av").textContent=(S.name||"P")[0].toUpperCase();
+  $("view").innerHTML={home:vHome,apps:vApps,plan:vPlan,stats:vStats}[tab]();
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===tab));
+  $("fab").style.display=tab==="apps"||tab==="home"?"block":"none";
+  if(tab==="plan"&&deferred)$("in").hidden=false;
+}
+function go(t){tab=t;const v=$("view");v.style.animation="none";v.offsetHeight;v.style.animation="";render()}
+$("nav").onclick=e=>{const b=e.target.closest("button");if(b)go(b.dataset.t)};
+$("av").onclick=()=>{const n=prompt("Your name",S.name);if(n!==null){S.name=n.trim().slice(0,20);save();render()}};
+
+function mark(id,on,mins){const k=dk();let a=S.done[k]||[];const was=a.length;a=on?[...new Set([...a,id])]:a.filter(x=>x!==id);S.done[k]=a;
+  if(on&&mins)S.mins[k]=(S.mins[k]||0)+mins;save();render();
+  if(on&&S.slots.every(s=>a.includes(s.id))){confetti();toast("All sessions done. Great streak!")}}
+
+$("view").addEventListener("click",e=>{
+  const g=e.target.closest("[data-go]");if(g)return startTimer(+g.dataset.go);
+  const f=e.target.closest("[data-f]");if(f){flt=f.dataset.f;return render()}
+  const o=e.target.closest("[data-open]");if(o){openId=openId==o.dataset.open?null:+o.dataset.open;return render()}
+  const ad=e.target.closest("[data-adv]");if(ad){const a=S.apps.find(x=>x.id==ad.dataset.adv);a.st=STAT[STAT.indexOf(a.st)+1];save();render();return toast(`Moved to ${a.st}`)}
+  const rj=e.target.closest("[data-rej]");if(rj){S.apps.find(x=>x.id==rj.dataset.rej).st="Rejected";save();return render()}
+  const dl=e.target.closest("[data-del]");if(dl){const i=S.apps.findIndex(x=>x.id==dl.dataset.del);lastDel={a:S.apps[i],i};S.apps.splice(i,1);save();render();return toast("Application deleted",1)}
+  const rs=e.target.closest("[data-rs]");if(rs){S.slots=S.slots.filter(s=>s.id!=rs.dataset.rs);save();return render()}
+  if(e.target.id==="as"){S.slots.push({id:Date.now(),time:"18:00",label:"Core subjects revision",min:30});save();render()}
+  if(e.target.id==="nt")askNotif();if(e.target.id==="ics")ics();
+  if(e.target.id==="th"){const n=getComputedStyle(document.documentElement).colorScheme==="dark"?"light":"dark";document.documentElement.dataset.theme=n;try{localStorage.setItem("placetrack.th",n)}catch(x){}}
+  if(e.target.id==="in"&&deferred){deferred.prompt();deferred=null;e.target.hidden=true}
+  if(e.target.id==="rs"&&confirm("Delete all your data and start fresh?")){S=JSON.parse(JSON.stringify(def));save();render()}
+});
+$("view").addEventListener("change",e=>{const d=e.target.dataset;
+  if(d.done)return mark(+d.done,e.target.checked,e.target.checked?(S.slots.find(s=>s.id==d.done)||{}).min:0);
+  if(d.note){S.apps.find(a=>a.id==d.note).note=e.target.value;return save()}
+  const id=+(d.t||d.l||d.m);const s=S.slots.find(x=>x.id===id);if(!s)return;
+  if(d.t&&e.target.value)s.time=e.target.value;if(d.l&&e.target.value.trim())s.label=e.target.value.trim();if(d.m)s.min=Math.min(300,Math.max(5,+e.target.value||30));save();render()});
+$("view").addEventListener("input",e=>{if(e.target.id==="q"){q=e.target.value;const p=e.target.selectionStart;render();const n=$("q");n.focus();n.setSelectionRange(p,p)}});
+$("undo").onclick=()=>{if(lastDel){S.apps.splice(lastDel.i,0,lastDel.a);lastDel=null;save();render();$("toast").className="toast"}};
+
+$("st").innerHTML=STAT.map(s=>`<option>${s}</option>`).join("");
+const sheet=on=>{$("ov").className="ov"+(on?" on":"");if(on){$("err").textContent="";$("co").focus()}};
+$("fab").onclick=()=>sheet(1);$("cx").onclick=()=>sheet(0);$("ov").onclick=e=>{if(e.target.id==="ov")sheet(0)};
+$("sv").onclick=()=>{const co=$("co").value.trim(),ro=$("ro").value.trim();
+  if(!co||!ro){$("err").textContent="Enter both the company and the role to save.";return}
+  S.apps.unshift({id:Date.now(),co,ro,st:$("st").value,dl:$("dl").value,note:""});$("co").value=$("ro").value=$("dl").value="";save();sheet(0);flt="All";go("apps");
+  toast(prepOn()?"Saved. Your daily prep plan is active.":"Application saved.")};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){sheet(0)}});
+
+function startTimer(id){const s=S.slots.find(x=>x.id===id);if(!s)return;T={id,tot:s.min*60,end:Date.now()+s.min*60000,rem:s.min*60,paused:false,min:s.min};
+  $("tl").textContent=s.label;$("tp").textContent="Pause";$("tm").className="ov tm on";clearInterval(T.iv);T.iv=setInterval(tickT,500);tickT()}
+function tickT(){if(!T)return;if(!T.paused)T.rem=Math.max(0,Math.round((T.end-Date.now())/1000));
+  $("tt").textContent=String(Math.floor(T.rem/60)).padStart(2,"0")+":"+String(T.rem%60).padStart(2,"0");$("tr").style.strokeDashoffset=553*(1-T.rem/T.tot);document.title=T.rem?`${$("tt").textContent} · PlaceTrack`:"PlaceTrack";
+  if(!T.rem&&!T.paused)endT(true)}
+function endT(full){const m=full?T.min:Math.max(1,Math.round((T.tot-T.rem)/60)),id=T.id;clearInterval(T.iv);T=null;document.title="PlaceTrack";$("tm").className="ov tm";
+  if(!dn().includes(id)){mark(id,true,m)}else{S.mins[dk()]=(S.mins[dk()]||0)+m;save();render()}toast(`Session saved: ${m} min`)}
+$("tp").onclick=()=>{if(!T)return;if(T.paused){T.end=Date.now()+T.rem*1000;T.paused=false;$("tp").textContent="Pause"}else{T.paused=true;$("tp").textContent="Resume"}};
+$("tf").onclick=()=>T&&endT(false);$("tc").onclick=()=>{if(T){clearInterval(T.iv);T=null;document.title="PlaceTrack";$("tm").className="ov tm"}};
+
+function notify(msg){try{if(!("Notification" in window)||Notification.permission!=="granted")return;
+  if(navigator.serviceWorker&&navigator.serviceWorker.controller)navigator.serviceWorker.ready.then(r=>r.showNotification("PlaceTrack",{body:msg,icon:"icons/icon-192.png",tag:"prep"}));else new Notification("PlaceTrack",{body:msg})}catch(e){}}
+async function askNotif(){if(!("Notification" in window))return toast("Notifications are not supported here.");try{const p=await Notification.requestPermission();toast(p==="granted"?"Notifications enabled.":"Notifications blocked in browser settings.")}catch(e){toast("Could not enable notifications here.")}}
+function tick(){if(!user||!prepOn())return;const k=dk(),now=hm(),sent=S.notified[k]=S.notified[k]||[];
+  S.slots.forEach(s=>{if(s.time===now&&!sent.includes(s.id)&&!dn().includes(s.id)){sent.push(s.id);save();const m=`Time to start: ${s.label} (${s.min} min)`;toast(m);notify(m)}});
+  if(!T&&tab==="home"&&!document.activeElement.closest(".card"))render()}
+setInterval(tick,20000);
+function ics(){const z=n=>String(n).padStart(2,"0"),d=new Date(),day=d.getFullYear()+z(d.getMonth()+1)+z(d.getDate());let o="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//PlaceTrack//EN\r\n";
+  S.slots.forEach(s=>{const t=s.label.replace(/[,;\n]/g," ");o+=`BEGIN:VEVENT\r\nUID:pt-${s.id}@placetrack\r\nDTSTAMP:${day}T000000\r\nDTSTART:${day}T${s.time.replace(":","")}00\r\nDURATION:PT${s.min}M\r\nRRULE:FREQ=DAILY\r\nSUMMARY:${t}\r\nBEGIN:VALARM\r\nTRIGGER:PT0M\r\nACTION:DISPLAY\r\nDESCRIPTION:${t}\r\nEND:VALARM\r\nEND:VEVENT\r\n`});
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([o+"END:VCALENDAR"],{type:"text/calendar"}));a.download="placetrack-schedule.ics";a.click();toast("Calendar file ready.")}
+
+let deferred=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;if(tab==="plan")$("in").hidden=false});
+if("serviceWorker" in navigator&&location.protocol.startsWith("http")){navigator.serviceWorker.register("sw.js").catch(()=>{})}
+try{const t=localStorage.getItem("placetrack.th");if(t)document.documentElement.dataset.theme=t}catch(e){}
+/* ---------- Login ---------- */
+const UK="placetrack.users",SK="placetrack.session";
+const users=()=>{try{return JSON.parse(localStorage.getItem(UK))||{}}catch(e){return{}}};
+const setUsers=u=>{try{localStorage.setItem(UK,JSON.stringify(u))}catch(e){}};
+async function hash(p,salt){const t=salt+":"+p;try{if(window.crypto&&crypto.subtle){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}}catch(e){}let h=5381;for(const c of t)h=(h*33)^c.charCodeAt(0);return "x"+(h>>>0).toString(16)}
+let mode="in";
+function setMode(m){mode=m;$("au-name-w").hidden=$("au-c-w").hidden=m==="in";$("au-go").textContent=m==="in"?"Log in":"Create account";
+  $("au-t").textContent=m==="in"?"Log in to continue your placement prep.":"Create an account to track your applications.";
+  $("tab-in").classList.toggle("on",m==="in");$("tab-up").classList.toggle("on",m==="up");$("au-err").textContent="";
+  $("au-pw").autocomplete=m==="in"?"current-password":"new-password"}
+$("tab-in").onclick=()=>setMode("in");$("tab-up").onclick=()=>setMode("up");
+$("au-show").onchange=e=>{$("au-pw").type=$("au-c").type=e.target.checked?"text":"password"};
+function enter(em){user=em;K="placetrack.u."+em;try{localStorage.setItem(SK,em)}catch(e){}
+  S=load();if(!S.name)S.name=(users()[em]||{}).name||"";save();tab="home";flt="All";q="";openId=null;
+  $("au-form").reset();$("auth").className="auth";render();tick();toast(`Welcome, ${S.name||"back"}!`)}
+function logout(){user=null;try{localStorage.removeItem(SK)}catch(e){}setMode("in");$("auth").className="auth on";$("au-em").focus()}
+$("au-form").addEventListener("submit",async e=>{e.preventDefault();
+  const em=$("au-em").value.trim().toLowerCase(),pw=$("au-pw").value,us=users(),err=m=>{$("au-err").textContent=m};
+  if(!/^\S+@\S+\.\S+$/.test(em))return err("Enter a valid email address, like name@example.com.");
+  if(pw.length<6)return err("Use a password with at least 6 characters.");
+  if(mode==="up"){const nm=$("au-name").value.trim();
+    if(!nm)return err("Enter your name to create an account.");
+    if(pw!==$("au-c").value)return err("Passwords do not match. Type them again.");
+    if(us[em])return err("An account with this email already exists. Log in instead.");
+    const salt=Math.random().toString(36).slice(2);us[em]={name:nm,salt,h:await hash(pw,salt)};setUsers(us);enter(em)}
+  else{const u=us[em];if(!u||u.h!==await hash(pw,u.salt))return err("Email or password is incorrect. Check both and try again.");enter(em)}});
+$("view").addEventListener("click",e=>{if(e.target.id==="lo"){clearInterval(T&&T.iv);T=null;$("tm").className="ov tm";logout()}});
+render();
+{const em=(()=>{try{return localStorage.getItem(SK)}catch(e){return null}})();if(em&&users()[em])enter(em);else setMode("in")}
+</script>
+</body>
+</html>
